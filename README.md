@@ -22,6 +22,7 @@ Before running the Coffee Supply Chain Marketplace Blockchain App, you need to h
 
 - [Ganache](https://www.trufflesuite.com/ganache): A personal blockchain for Ethereum development.
 - [Truffle](https://www.trufflesuite.com/truffle): A development framework for Ethereum DApps.
+You will also need to have the [meta mask](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn/related?hl=en) extention installed
 
 ### Installation
 
