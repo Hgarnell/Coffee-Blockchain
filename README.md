@@ -65,8 +65,8 @@ Access the DApp in your web browser at http://localhost:3000.
 ## Features
 Credits
 This Coffee Supply Chain Marketplace Blockchain App was developed based on the tutorial provided in this YouTube video. The tutorial served as a foundational guide for creating the app and understanding the concepts behind blockchain-based supply chain tracking.
-https://www.youtube.com/watch?v=VH9Q2lf2mNo&t=4s
-Original Tutorial by: [Dapp University](https://www.youtube.com/watch?v=VH9Q2lf2mNo&t=4s)
+https://trufflesuite.com/guides/pet-shop/
+Original Tutorial by: [Truffle Suite](https://trufflesuite.com/guides/pet-shop/)
 
 ##License
 This project is licensed under the MIT License.
