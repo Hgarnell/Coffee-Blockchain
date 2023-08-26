@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/pet-shop-tutorial/node_modules
 /.pnp
 .pnp.js
 
