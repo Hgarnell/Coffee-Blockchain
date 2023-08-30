@@ -54,7 +54,12 @@ contract CoffeeSupplyChain {
         );
         _;
     }
-      event BeanHarvested(uint256 indexed beanId, string growerName, uint256 harvestTimestamp, uint256 beanWeight);
+    event BeanHarvested(
+        uint256 indexed beanId,
+        string growerName,
+        uint256 harvestTimestamp,
+        uint256 beanWeight
+    );
     event BeanProcessed(uint256 indexed beanId);
     event BeanPacked(uint256 indexed beanId);
     event BeanShipped(uint256 indexed beanId);
@@ -72,61 +77,113 @@ contract CoffeeSupplyChain {
     }
 
     // Function to harvest beans
-    function harvestBean(string memory _growerName, uint256 _beanWeight) public onlyOfType(OwnerType.Grower) {
+    function harvestBean(
+        string memory _growerName,
+        uint256 _beanWeight
+    ) public onlyOfType(OwnerType.Grower) {
         beanCount++;
-        beans[beanCount] = Bean(beanCount, _growerName, block.timestamp, _beanWeight, BeanStatus.Harvested);
-        emit BeanHarvested(beanCount, _growerName, block.timestamp, _beanWeight);
+        beans[beanCount] = Bean(
+            beanCount,
+            _growerName,
+            block.timestamp,
+            _beanWeight,
+            BeanStatus.Harvested,
+            OwnerType.Grower
+        );
+        emit BeanHarvested(
+            beanCount,
+            _growerName,
+            block.timestamp,
+            _beanWeight
+        );
     }
 
     // Function to process beans
-    function processBean(uint256 _beanId) public onlyOfType(OwnerType.Processor) {
-        require(beans[_beanId].status == BeanStatus.Harvested, "Bean has not been harvested yet");
+    function processBean(
+        uint256 _beanId
+    ) public onlyOfType(OwnerType.Processor) {
+        require(
+            beans[_beanId].status == BeanStatus.Harvested,
+            "Bean has not been harvested yet"
+        );
         beans[_beanId].status = BeanStatus.Processed;
+        beans[_beanId].ownerName = OwnerType.Processor;
+
         emit BeanProcessed(_beanId);
     }
 
-     // Function to process beans
+    // Function to process beans
     function roastBean(uint256 _beanId) public onlyOfType(OwnerType.Roaster) {
-        require(beans[_beanId].status == BeanStatus.Roasted, "Bean has not been harvested yet");
-        beans[_beanId].status = BeanStatus.Processed;
+        require(
+            beans[_beanId].status == BeanStatus.Processed,
+            "Bean has not been Processed yet"
+        );
+        beans[_beanId].status = BeanStatus.Roasted;
+        beans[_beanId].ownerName = OwnerType.Roaster;
+
         emit BeanProcessed(_beanId);
     }
 
     // Function to pack beans
-    function packBean(uint256 _beanId) public onlyOfType(OwnerType.Distributor) {
-        require(beans[_beanId].status == BeanStatus.Processed, "Bean has not been processed yet");
+    function packBean(
+        uint256 _beanId
+    ) public onlyOfType(OwnerType.Distributor) {
+        require(
+            beans[_beanId].status == BeanStatus.Roasted,
+            "Bean has not been Roasted yet"
+        );
         beans[_beanId].status = BeanStatus.Packed;
+        beans[_beanId].ownerName = OwnerType.Distributor;
+
         emit BeanPacked(_beanId);
     }
 
     // Function to ship beans
-    function shipBean(uint256 _beanId) public onlyOfType(OwnerType.Distributor) {
-        require(beans[_beanId].status == BeanStatus.Packed, "Bean has not been packed yet");
+    function shipBean(
+        uint256 _beanId
+    ) public onlyOfType(OwnerType.Distributor) {
+        require(
+            beans[_beanId].status == BeanStatus.Packed,
+            "Bean has not been packed yet"
+        );
         beans[_beanId].status = BeanStatus.Shipped;
         emit BeanShipped(_beanId);
     }
 
     // Function to receive beans
-    function receiveBean(uint256 _beanId) public onlyOfType(OwnerType.Retailer) {
-        require(beans[_beanId].status == BeanStatus.Shipped, "Bean has not been shipped yet");
+    function receiveBean(
+        uint256 _beanId
+    ) public onlyOfType(OwnerType.Retailer) {
+        require(
+            beans[_beanId].status == BeanStatus.Shipped,
+            "Bean has not been shipped yet"
+        );
         beans[_beanId].status = BeanStatus.Received;
         emit BeanReceived(_beanId);
     }
 
     // Function to get the entire process of how the bean was transacted
-    function getBeanProcess(uint256 _beanId) public view returns (BeanStatus[] memory) {
+    function getBeanProcess(
+        uint256 _beanId
+    ) public view returns (BeanStatus[] memory) {
         require(_beanId <= beanCount && _beanId > 0, "Invalid bean ID");
-        
-        BeanStatus[] memory process = new BeanStatus[](uint256(BeanStatus.Received) + 1);
 
-        for (uint256 i = uint256(BeanStatus.Harvested); i <= uint256(BeanStatus.Received); i++) {
+        BeanStatus[] memory process = new BeanStatus[](
+            uint256(BeanStatus.Received) + 1
+        );
+
+        for (
+            uint256 i = uint256(BeanStatus.Harvested);
+            i <= uint256(BeanStatus.Received);
+            i++
+        ) {
             if (i == uint256(BeanStatus.Received)) {
                 process[i] = beans[_beanId].status;
             } else {
                 process[i] = BeanStatus(i);
             }
         }
-        
+
         return process;
     }
 }
